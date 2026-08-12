@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b7a55">
+<title>bKash Charge Calculator</title>
+<style>
+:root{--brand:#E2136E;--brand2:#b30f58;--bg:#f4f7f6;--card:#fff;--text:#17221e;--muted:#65736d;--line:#dce5e1;--soft:#fce7f0;--danger:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+.wrap{width:min(900px,calc(100% - 24px));margin:0 auto;padding:18px 0 36px}
+header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-radius:22px;padding:24px 20px;margin-bottom:16px;box-shadow:0 10px 30px #E2136E20}
+h1{margin:0;font-size:clamp(25px,6vw,36px)} header p{margin:7px 0 0;opacity:.9}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 5px 18px #17221e08}
+label{display:block;font-weight:700;margin-bottom:8px}select,input{width:100%;height:52px;border:1px solid var(--line);border-radius:12px;padding:0 14px;font-size:16px;background:#fff;color:var(--text);outline:none}
+select:focus,input:focus{border-color:var(--brand);box-shadow:0 0 0 3px #E2136E18}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.hint{font-size:13px;color:var(--muted);margin-top:7px}
+.result{background:var(--soft);border:1px solid #f5c1d8;border-radius:16px;padding:18px;margin-top:16px}
+.big{font-size:clamp(30px,8vw,46px);font-weight:800;color:var(--brand);line-height:1.05}
+.rows{margin-top:15px;border-top:1px solid #f5c1d8}.row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #f5c1d8}.row b:last-child{text-align:right}
+.note{font-size:13px;color:var(--muted);line-height:1.5;margin-top:12px}
+.split{display:none}.split.show{display:block;margin-top:14px}
+.badge{display:inline-block;background:#fff;border:1px solid #f5c1d8;border-radius:999px;padding:5px 9px;font-size:12px;color:var(--brand);font-weight:700}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:18px}
+@media(max-width:620px){.grid{grid-template-columns:1fr}.wrap{width:min(100% - 16px,900px)}.card{padding:15px;border-radius:16px}header{border-radius:18px;padding:20px 16px}.row{font-size:14px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>৳ bKash Charge Calculator</h1>
+  <p>Quickly calculate charges, total deductions and effective rates.</p>
+</header>
+
+<section class="card">
+  <div class="grid">
+    <div>
+      <label for="method">Transaction type</label>
+      <select id="method">
+        <option value="priyo">Cash Out — Priyo Agent</option>
+        <option value="other">Cash Out — Other Agent</option>
+        <option value="atm">Cash Out — bKash ATM</option>
+        <option value="npsb">bKash → Bank/MFS (NPSB)</option>
+        <option value="bank">bKash → Bank Transfer</option>
+        <option value="visa">bKash → Visa Debit Card</option>
+      </select>
+    </div>
+    <div>
+      <label for="amount">Transaction amount (৳)</label>
+      <input id="amount" type="number" inputmode="decimal" min="0" step="0.01" placeholder="e.g. 10000">
+    </div>
+  </div>
+
+  <div id="monthlyBox" style="margin-top:14px">
+    <label for="monthly">Priyo Agent cash-out already used this month (৳)</label>
+    <input id="monthly" type="number" inputmode="decimal" min="0" max="50000" step="0.01" placeholder="0">
+    <div class="hint">Used only for Priyo Agent. The calculator automatically splits a transaction if it crosses the ৳50,000 monthly limit.</div>
+  </div>
+
+  <div id="visaNote" class="note" style="display:none">
+    Visa Debit Card rate: 1.25% up to ৳25,001; above ৳25,001, 1.49%.
+  </div>
+
+  <div class="result" id="result">
+    <span class="badge">Enter an amount</span>
+    <div class="big" id="charge">৳0.00</div>
+    <div class="rows">
+      <div class="row"><span>Transaction amount</span><b id="rAmount">৳0.00</b></div>
+      <div class="row"><span>Charge rate</span><b id="rate">—</b></div>
+      <div class="row"><span>Total deducted</span><b id="total">৳0.00</b></div>
+      <div class="row"><span>Amount received</span><b id="received">৳0.00</b></div>
+    </div>
+    <div class="split" id="split"></div>
+    <div class="note" id="message">Charges are calculated from the rates provided.</div>
+  </div>
+</section>
+
+<section class="card">
+  <b>Current rates</b>
+  <div class="rows" style="margin-top:10px">
+    <div class="row"><span>Priyo Agent</span><b>1.395% ≤ ৳50k/month</b></div>
+    <div class="row"><span>Other Agent</span><b>1.85%</b></div>
+    <div class="row"><span>bKash ATM</span><b>1.49%</b></div>
+    <div class="row"><span>Bank/MFS (NPSB)</span><b>0.85%</b></div>
+    <div class="row"><span>Bank Transfer</span><b>1.25%</b></div>
+    <div class="row"><span>Visa Debit Card</span><b>1.25% / 1.49%</b></div>
+  </div>
+</section>
+<footer>Rates shown are based on the charge list from bKash Limited.</footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const money=n=>'৳'+n.toLocaleString('en-BD',{minimumFractionDigits:2,maximumFractionDigits:2});
+function calc(){
+ const method=$('method').value, amount=Math.max(0,Number($('amount').value)||0), used=Math.min(50000,Math.max(0,Number($('monthly').value)||0));
+ $('monthlyBox').style.display=method==='priyo'?'block':'none';
+ $('visaNote').style.display=method==='visa'?'block':'none';
+ let charge=0, rateText='—', details='';
+ if(amount===0){update(0,0,'—', 'Enter an amount to calculate.');return}
+ if(method==='priyo'){
+   const discounted=Math.max(0,Math.min(amount,50000-used));
+   const normal=Math.max(0,amount-discounted);
+   charge=discounted*.01395+normal*.0185;
+   rateText=(normal>0 && discounted>0)?'Split rate':(normal>0?'1.85%':'1.395%');
+   if(normal>0) details=`<div class="row"><span>At 1.395%</span><b>${money(discounted)}</b></div><div class="row"><span>At 1.85%</span><b>${money(normal)}</b></div>`;
+   $('split').innerHTML=details;$('split').className='split '+(details?'show':'');
+   const remaining=Math.max(0,50000-used-amount);
+   $('message').textContent=normal>0?`Monthly Priyo Agent limit crossed by ${money(Math.max(0,used+amount-50000))}.`:`Remaining Priyo Agent monthly limit after this transaction: ${money(remaining)}.`;
+ } else {
+   const rate=method==='other'?.0185:method==='atm'?.0149:method==='npsb'?.0085:method==='bank'?.0125:amount<=25001?.0125:.0149;
+   charge=amount*rate; rateText=(rate*100).toFixed(3).replace(/0+$/,'').replace(/\.$/,'')+'%';
+   $('split').innerHTML='';$('split').className='split';
+   $('message').textContent='Charge calculated using the selected rate.';
+ }
+ update(amount,charge,rateText,$('message').textContent);
+}
+function update(amount,charge,rate,msg){
+ $('charge').textContent=money(charge);$('rAmount').textContent=money(amount);$('rate').textContent=rate;
+ $('total').textContent=money(amount+charge);$('received').textContent=money(Math.max(0,amount-charge));$('message').textContent=msg;
+}
+$('method').addEventListener('change',calc);$('amount').addEventListener('input',calc);$('monthly').addEventListener('input',calc);
+calc();
+</script>
+</body>
+</html>
