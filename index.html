@@ -160,5 +160,14 @@ function update(amount,charge,rate,msg){
 $('method').addEventListener('change',calc);$('amount').addEventListener('input',calc);$('monthly').addEventListener('input',calc);
 calc();
 </script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js")
+      .then(() => console.log("Service Worker registered"))
+      .catch(error => console.error("Service Worker registration failed:", error));
+  });
+}
+</script>
 </body>
 </html>
