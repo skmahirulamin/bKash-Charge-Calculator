@@ -10,7 +10,25 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
 .wrap{width:min(900px,calc(100% - 24px));margin:0 auto;padding:18px 0 36px}
 header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;border-radius:22px;padding:24px 20px;margin-bottom:16px;box-shadow:0 10px 30px #E2136E20}
-h1{margin:0;font-size:clamp(25px,6vw,36px)} header p{margin:7px 0 0;opacity:.9}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.brand img{
+  width:58px;
+  height:58px;
+  object-fit:contain;
+  border-radius:14px;
+  background:#fff;
+  padding:5px;
+  flex-shrink:0;
+}
+
+h1{margin:0;font-size:clamp(25px,6vw,36px)}
+header p{margin:7px 0 0;opacity:.9}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 5px 18px #17221e08}
 label{display:block;font-weight:700;margin-bottom:8px}select,input{width:100%;height:52px;border:1px solid var(--line);border-radius:12px;padding:0 14px;font-size:16px;background:#fff;color:var(--text);outline:none}
 select:focus,input:focus{border-color:var(--brand);box-shadow:0 0 0 3px #E2136E18}
@@ -22,14 +40,29 @@ select:focus,input:focus{border-color:var(--brand);box-shadow:0 0 0 3px #E2136E1
 .split{display:none}.split.show{display:block;margin-top:14px}
 .badge{display:inline-block;background:#fff;border:1px solid #f5c1d8;border-radius:999px;padding:5px 9px;font-size:12px;color:var(--brand);font-weight:700}
 footer{text-align:center;color:var(--muted);font-size:12px;margin-top:18px}
-@media(max-width:620px){.grid{grid-template-columns:1fr}.wrap{width:min(100% - 16px,900px)}.card{padding:15px;border-radius:16px}header{border-radius:18px;padding:20px 16px}.row{font-size:14px}}
+@media(max-width:620px){
+  .grid{grid-template-columns:1fr}
+  .wrap{width:min(100% - 16px,900px)}
+  .card{padding:15px;border-radius:16px}
+  header{border-radius:18px;padding:20px 16px}
+  .brand img{
+    width:50px;
+    height:50px;
+  }
+  .row{font-size:14px}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <h1>৳ bKash Charge Calculator</h1>
-  <p>Quickly calculate charges, total deductions and effective rates.</p>
+  <div class="brand">
+    <img src="logo.png" alt="bKash Charge Calculator Logo">
+    <div>
+      <h1>bKash Charge Calculator</h1>
+      <p>Quickly calculate charges, total deductions and effective rates.</p>
+    </div>
+  </div>
 </header>
 
 <section class="card">
